@@ -152,6 +152,7 @@ const characters = [
 ];
 let selectedInitial = 'ㄅ';
 let selectedFinal = 'ㄠ';
+let comboCycleIndex = 0;
 let unlockedCharacters = Number(localStorage.getItem('zhuyinUnlockedCharacters') || 0);
 
 function renderCollection() {
@@ -217,6 +218,12 @@ document.querySelector('#unlock-button').addEventListener('click', () => {
   document.querySelector('#collection-status').textContent = `太棒了！你拼出了「${combo.fullWord}」，新的朋友已加入收集冊！`;
   document.querySelector('#collection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
+document.querySelector('#change-combo-button').addEventListener('click', () => {
+  comboCycleIndex = (comboCycleIndex + 1) % combinations.length;
+  selectedInitial = combinations[comboCycleIndex].initial;
+  selectedFinal = combinations[comboCycleIndex].final;
+  updateCombination();
+});
 updateCombination();
 renderCollection();
 
@@ -227,6 +234,7 @@ document.querySelector('#reset-button').addEventListener('click', () => {
   unlockedCharacters = 0;
   selectedInitial = 'ㄅ';
   selectedFinal = 'ㄠ';
+  comboCycleIndex = 0;
   questionIndex = 0;
   renderCategory('initials');
   buildPicker('#initial-picker', ['ㄅ','ㄇ','ㄉ','ㄌ','ㄏ','ㄐ'], selectedInitial, value => { selectedInitial = value; updateCombination(); });
