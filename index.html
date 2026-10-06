@@ -24,12 +24,21 @@
   </header>
 
   <main id="home">
+    <section class="collection-section" id="collection" aria-labelledby="collection-title">
+      <div class="collection-heading">
+        <div><p class="eyebrow"><span class="sparkle">✦</span> 今天先來逛逛</p><h1 id="collection-title">我的三麗鷗人物收集冊</h1><p>完成注音組合任務，就能打開一張新的角色卡！</p></div>
+        <a class="official-link" href="https://www.sanrio.com.tw/characters/" target="_blank" rel="noopener">看官方明星介紹 ↗</a>
+      </div>
+      <div class="collection-grid" id="collection-grid" aria-live="polite"></div>
+      <div class="collection-note"><span>🎀</span><b id="collection-status">先選一個注音組合，完成後解鎖第一位朋友！</b></div>
+    </section>
+
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-copy">
         <p class="eyebrow"><span class="sparkle">✦</span> 給每一位注音新手</p>
         <h1 id="hero-title">每天一點點，<br><span>ㄅㄆㄇ更熟悉。</span></h1>
-        <p class="hero-text">先聽聲音，再認符號。用自己的步調，認識 37 個注音符號和四聲。</p>
-        <a class="primary-button" href="#learn">從第一個符號開始 <span aria-hidden="true">→</span></a>
+        <p class="hero-text">先把聲音拼起來，再找出圖片。每完成一個小任務，就離收集冊更近一步！</p>
+        <a class="primary-button" href="#combine">開始組合注音 <span aria-hidden="true">→</span></a>
       </div>
       <div class="hero-art" aria-label="ㄅ、ㄆ、ㄇ注音符號插圖">
         <div class="sun"></div><div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
@@ -37,6 +46,11 @@
         <span class="art-star star-one">✦</span><span class="art-star star-two">✧</span>
         <span class="art-caption">你好，注音！</span>
       </div>
+    </section>
+
+    <section class="combine-section" id="combine" aria-labelledby="combine-title">
+      <div class="combine-copy"><p class="eyebrow">第一關・注音拼拼樂</p><h2 id="combine-title">把兩個聲音拼成一個詞</h2><p>選一個聲母，再選一個韻母，看看它們會變成什麼。完成後就能解鎖角色卡！</p><div class="combo-preview"><span id="combo-initial">ㄅ</span><span id="combo-final">ㄠ</span><b id="combo-word">包</b></div><button class="sound-guide" id="combo-speak" type="button">🔊 聽聽這個詞</button></div>
+      <div class="combine-picker"><div><label>聲母</label><div class="picker-row" id="initial-picker"></div></div><div><label>韻母</label><div class="picker-row" id="final-picker"></div></div><div class="word-picture" id="word-picture"><span class="picture-emoji">🥟</span><b>包子</b><small>ㄅ＋ㄠ</small></div><button class="unlock-button" id="unlock-button" type="button">完成組合，領取角色 🎁</button></div>
     </section>
 
     <section class="learning-layout" id="learn">

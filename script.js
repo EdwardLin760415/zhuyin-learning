@@ -132,3 +132,80 @@ document.querySelector('#next-button').addEventListener('click', () => { questio
 renderCategory(currentCategory);
 updateProgress();
 showQuestion();
+
+// 小一注音組合：短短兩步，拼出詞語與圖片，再解鎖收集冊角色。
+const combinations = [
+  { initial: 'ㄅ', final: 'ㄠ', word: '包', fullWord: '包子', emoji: '🥟' },
+  { initial: 'ㄇ', final: 'ㄚ', word: '媽', fullWord: '媽媽', emoji: '👩' },
+  { initial: 'ㄉ', final: 'ㄚ', word: '搭', fullWord: '搭車', emoji: '🚌' },
+  { initial: 'ㄌ', final: 'ㄧ', word: '梨', fullWord: '梨子', emoji: '🍐' },
+  { initial: 'ㄏ', final: 'ㄜ', word: '喝', fullWord: '喝水', emoji: '🥤' },
+  { initial: 'ㄐ', final: 'ㄧ', word: '雞', fullWord: '雞蛋', emoji: '🥚' }
+];
+const characters = [
+  { name: 'Hello Kitty', emoji: '🎀', color: '#ffd9df', note: '甜甜的第一張卡' },
+  { name: '美樂蒂', emoji: '🐰', color: '#ffe0ee', note: '溫柔的粉紅朋友' },
+  { name: '酷洛米', emoji: '😈', color: '#e3d9ff', note: '有個性的可愛夥伴' },
+  { name: '大耳狗', emoji: '☁️', color: '#d9efff', note: '軟綿綿的天空朋友' },
+  { name: '布丁狗', emoji: '🍮', color: '#fff0b8', note: '搖搖尾巴一起玩' },
+  { name: '帕恰狗', emoji: '🐶', color: '#dff3e6', note: '活力滿滿的好朋友' }
+];
+let selectedInitial = 'ㄅ';
+let selectedFinal = 'ㄠ';
+let unlockedCharacters = Number(localStorage.getItem('zhuyinUnlockedCharacters') || 0);
+
+function renderCollection() {
+  const collectionGrid = document.querySelector('#collection-grid');
+  collectionGrid.innerHTML = '';
+  characters.forEach((character, index) => {
+    const card = document.createElement('article');
+    const unlocked = index < unlockedCharacters;
+    card.className = `character-card${unlocked ? '' : ' locked'}`;
+    card.innerHTML = `<div class="character-art" style="background:${character.color}">${unlocked ? character.emoji : '？'}</div><b>${unlocked ? character.name : '神秘朋友'}</b><small>${unlocked ? character.note : '完成組合解鎖'}</small><span class="lock" aria-hidden="true">${unlocked ? '✓' : '🔒'}</span>`;
+    collectionGrid.append(card);
+  });
+  const status = document.querySelector('#collection-status');
+  status.textContent = unlockedCharacters ? `已收集 ${unlockedCharacters} / ${characters.length} 位朋友，繼續拼音就能打開下一張卡！` : '先選一個注音組合，完成後解鎖第一位朋友！';
+}
+
+function matchingCombination() {
+  return combinations.find(item => item.initial === selectedInitial && item.final === selectedFinal) || combinations[0];
+}
+
+function updateCombination() {
+  const combo = matchingCombination();
+  document.querySelector('#combo-initial').textContent = selectedInitial;
+  document.querySelector('#combo-final').textContent = selectedFinal;
+  document.querySelector('#combo-word').textContent = combo.word;
+  document.querySelector('#word-picture').innerHTML = `<span class="picture-emoji" role="img" aria-label="${combo.fullWord}圖片">${combo.emoji}</span><b>${combo.fullWord}</b><small>${selectedInitial}＋${selectedFinal}</small>`;
+  document.querySelector('#combo-speak').onclick = () => speak(combo.fullWord);
+  document.querySelectorAll('.pick').forEach(button => button.classList.toggle('selected', button.dataset.value === selectedInitial || button.dataset.value === selectedFinal));
+}
+
+function buildPicker(selector, values, selected, onSelect) {
+  const root = document.querySelector(selector);
+  root.innerHTML = '';
+  values.forEach(value => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `pick${value === selected ? ' selected' : ''}`;
+    button.dataset.value = value;
+    button.textContent = value;
+    button.addEventListener('click', () => { onSelect(value); updateCombination(); });
+    root.append(button);
+  });
+}
+
+buildPicker('#initial-picker', ['ㄅ','ㄇ','ㄉ','ㄌ','ㄏ','ㄐ'], selectedInitial, value => { selectedInitial = value; });
+buildPicker('#final-picker', ['ㄠ','ㄚ','ㄜ','ㄧ'], selectedFinal, value => { selectedFinal = value; });
+document.querySelector('#unlock-button').addEventListener('click', () => {
+  const combo = matchingCombination();
+  speak(combo.fullWord);
+  if (unlockedCharacters < characters.length) unlockedCharacters += 1;
+  localStorage.setItem('zhuyinUnlockedCharacters', String(unlockedCharacters));
+  renderCollection();
+  document.querySelector('#collection-status').textContent = `太棒了！你拼出了「${combo.fullWord}」，新的朋友已加入收集冊！`;
+  document.querySelector('#collection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+updateCombination();
+renderCollection();
