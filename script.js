@@ -209,3 +209,22 @@ document.querySelector('#unlock-button').addEventListener('click', () => {
 });
 updateCombination();
 renderCollection();
+
+document.querySelector('#reset-button').addEventListener('click', () => {
+  localStorage.removeItem('zhuyinLearned');
+  localStorage.removeItem('zhuyinUnlockedCharacters');
+  learned.clear();
+  unlockedCharacters = 0;
+  selectedInitial = 'ㄅ';
+  selectedFinal = 'ㄠ';
+  questionIndex = 0;
+  renderCategory('initials');
+  buildPicker('#initial-picker', ['ㄅ','ㄇ','ㄉ','ㄌ','ㄏ','ㄐ'], selectedInitial, value => { selectedInitial = value; updateCombination(); });
+  buildPicker('#final-picker', ['ㄠ','ㄚ','ㄜ','ㄧ'], selectedFinal, value => { selectedFinal = value; updateCombination(); });
+  updateCombination();
+  updateProgress();
+  showQuestion();
+  renderCollection();
+  document.querySelector('#collection-status').textContent = '已清空進度，準備好再拼一次了！';
+  document.querySelector('#combine').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
