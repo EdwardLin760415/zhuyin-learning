@@ -169,7 +169,16 @@ function renderCollection() {
 }
 
 function matchingCombination() {
-  return combinations.find(item => item.initial === selectedInitial && item.final === selectedFinal) || combinations[0];
+  const matched = combinations.find(item => item.initial === selectedInitial && item.final === selectedFinal);
+  if (matched) return matched;
+  return {
+    initial: selectedInitial,
+    final: selectedFinal,
+    word: `${selectedInitial}${selectedFinal}`,
+    fullWord: `${selectedInitial}${selectedFinal} 這個音節`,
+    emoji: '🧩',
+    isPracticeSyllable: true
+  };
 }
 
 function updateCombination() {
@@ -177,7 +186,8 @@ function updateCombination() {
   document.querySelector('#combo-initial').textContent = selectedInitial;
   document.querySelector('#combo-final').textContent = selectedFinal;
   document.querySelector('#combo-word').textContent = combo.word;
-  document.querySelector('#word-picture').innerHTML = `<span class="picture-emoji" role="img" aria-label="${combo.fullWord}圖片">${combo.emoji}</span><b>${combo.fullWord}</b><small>${selectedInitial}＋${selectedFinal}</small>`;
+  const wordLabel = combo.isPracticeSyllable ? '先練習這個音節' : combo.fullWord;
+  document.querySelector('#word-picture').innerHTML = `<span class="picture-emoji" role="img" aria-label="${wordLabel}圖片">${combo.emoji}</span><b>${wordLabel}</b><small>${selectedInitial}＋${selectedFinal}</small>`;
   document.querySelector('#combo-speak').onclick = () => speak(combo.fullWord);
   document.querySelectorAll('.pick').forEach(button => button.classList.toggle('selected', button.dataset.value === selectedInitial || button.dataset.value === selectedFinal));
 }
