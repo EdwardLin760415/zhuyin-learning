@@ -189,9 +189,11 @@ function renderChallenge(challenge) {
   wordPicture.innerHTML = `<span class="picture-emoji" role="img" aria-label="${challenge.fullWord}圖片">${challenge.emoji}</span><b>${challenge.fullWord}</b><small>看圖選注音</small>`;
   document.querySelector('.challenge-label').textContent = `請選出「${challenge.fullWord}」的完整注音`;
 
-  const choices = [...new Set([answer, ...combinations.map(item => `${item.initial}${item.final}`)])]
+  const wrongChoices = [...new Set(combinations.map(item => `${item.initial}${item.final}`))]
+    .filter(choice => choice !== answer)
     .sort(() => Math.random() - 0.5)
-    .slice(0, 4);
+    .slice(0, 3);
+  const choices = [...wrongChoices, answer].sort(() => Math.random() - 0.5);
   document.querySelectorAll('.combo-answer').forEach((button, index) => {
     const choice = choices[index];
     button.hidden = !choice;
