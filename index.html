@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff8ef">
+  <meta name="description" content="用輕鬆、短短的練習認識注音符號，聽一聽、看一看，慢慢學會ㄅㄆㄇ。">
+  <title>ㄅㄆㄇ小學堂｜每天一點點，注音更熟悉</title>
+  <link rel="icon" href="images/zhuyin-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="ㄅㄆㄇ小學堂首頁">
+      <img src="images/zhuyin-mark.svg" alt="" width="46" height="46">
+      <span><strong>ㄅㄆㄇ小學堂</strong><small>注音，從好玩開始</small></span>
+    </a>
+    <nav class="nav" aria-label="主要導覽">
+      <a class="nav-link active" href="#learn" data-view="learn">開始學習</a>
+      <a class="nav-link" href="#practice" data-view="practice">小試身手</a>
+    </nav>
+    <div class="streak" aria-label="今日學習狀態"><span aria-hidden="true">✦</span> <b id="learned-count">0</b><span>個符號已認識</span></div>
+  </header>
+
+  <main id="home">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="sparkle">✦</span> 給每一位注音新手</p>
+        <h1 id="hero-title">每天一點點，<br><span>ㄅㄆㄇ更熟悉。</span></h1>
+        <p class="hero-text">先聽聲音，再認符號。用自己的步調，認識 37 個注音符號和四聲。</p>
+        <a class="primary-button" href="#learn">從第一個符號開始 <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="hero-art" aria-label="ㄅ、ㄆ、ㄇ注音符號插圖">
+        <div class="sun"></div><div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
+        <div class="letter letter-b">ㄅ</div><div class="letter letter-p">ㄆ</div><div class="letter letter-m">ㄇ</div>
+        <span class="art-star star-one">✦</span><span class="art-star star-two">✧</span>
+        <span class="art-caption">你好，注音！</span>
+      </div>
+    </section>
+
+    <section class="learning-layout" id="learn">
+      <aside class="sidebar" aria-label="學習分類">
+        <p class="side-title">學習小路線</p>
+        <button class="lesson active" data-category="initials"><span class="lesson-icon coral">ㄅ</span><span><b>聲母</b><small>21 個起頭聲音</small></span><span class="chevron">›</span></button>
+        <button class="lesson" data-category="medials"><span class="lesson-icon yellow">ㄧ</span><span><b>介符</b><small>3 個連接小幫手</small></span><span class="chevron">›</span></button>
+        <button class="lesson" data-category="finals"><span class="lesson-icon mint">ㄚ</span><span><b>韻母</b><small>13 個收尾聲音</small></span><span class="chevron">›</span></button>
+        <button class="lesson" data-category="tones"><span class="lesson-icon lilac">ˊ</span><span><b>四聲</b><small>讓聲音有高低</small></span><span class="chevron">›</span></button>
+        <div class="progress-card"><div class="progress-heading"><span>今日小目標</span><span id="progress-label">0 / 5</span></div><div class="progress-track"><span id="progress-fill"></span></div><p>完成 5 個符號練習，今天就很棒！</p></div>
+      </aside>
+
+      <section class="lesson-content" aria-live="polite">
+        <div class="section-heading"><div><p class="eyebrow" id="category-eyebrow">第一站・聲母</p><h2 id="category-title">認識聲母</h2></div><button class="sound-guide" id="guide-button" type="button"><span aria-hidden="true">🔊</span> 聽聽看</button></div>
+        <p class="section-intro" id="category-description">聲母通常是音節開頭的聲音。點一個符號，聽聽它搭配例字的讀音。</p>
+        <div class="symbol-grid" id="symbol-grid" aria-label="注音符號列表"></div>
+        <div class="tip"><span class="tip-icon" aria-hidden="true">☝</span><p><b>小提示</b><br>點卡片上的喇叭，可以聽例字怎麼唸。跟著大聲唸一遍，記得更牢喔！</p></div>
+      </section>
+    </section>
+
+    <section class="practice-section" id="practice">
+      <div class="practice-card">
+        <div class="practice-copy"><p class="eyebrow">玩個小練習</p><h2>聽一聽，選出你聽到的聲音！</h2><p>答對一題，就多認識一個符號。答錯也沒關係，再試一次就好。</p></div>
+        <div class="quiz" id="quiz" aria-live="polite">
+          <div class="quiz-top"><span class="quiz-count" id="quiz-count">第 1 題</span><button class="listen-button" id="quiz-listen" type="button" aria-label="播放題目聲音">🔊 播放聲音</button></div>
+          <div class="choices" id="choices"></div>
+          <p class="feedback" id="feedback" aria-live="assertive">先按「播放聲音」，再選答案吧！</p>
+          <button class="next-button" id="next-button" type="button" disabled>下一題 <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>ㄅㄆㄇ小學堂</span><span>慢慢學，也是一種很棒的進步。</span></footer>
+</body>
+</html>
