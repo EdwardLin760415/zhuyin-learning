@@ -183,13 +183,38 @@ function matchingCombination() {
   };
 }
 
+function renderChallenge(challenge) {
+  const answer = `${challenge.initial}${challenge.final}`;
+  const wordPicture = document.querySelector('#word-picture');
+  wordPicture.innerHTML = `<span class="picture-emoji" role="img" aria-label="${challenge.fullWord}圖片">${challenge.emoji}</span><b>${challenge.fullWord}</b><small>看圖選注音</small>`;
+  document.querySelector('.challenge-label').textContent = `請選出「${challenge.fullWord}」的完整注音`;
+
+  const choices = [...new Set([answer, ...combinations.map(item => `${item.initial}${item.final}`)])]
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 4);
+  document.querySelectorAll('.combo-answer').forEach((button, index) => {
+    const choice = choices[index];
+    button.hidden = !choice;
+    button.dataset.answer = choice || '';
+    button.textContent = choice || '';
+    button.className = 'combo-answer';
+  });
+  const feedback = document.querySelector('#combo-feedback');
+  feedback.textContent = '選一個你覺得正確的答案吧！';
+  feedback.className = 'combo-feedback';
+  comboCompleted = false;
+  document.querySelector('#unlock-button').disabled = true;
+}
+
 function updateCombination() {
   const combo = matchingCombination();
   document.querySelector('#combo-initial').textContent = selectedInitial;
   document.querySelector('#combo-final').textContent = selectedFinal;
   document.querySelector('#combo-word').textContent = combo.word;
   const wordPicture = document.querySelector('#word-picture');
-  if (!wordPicture.classList.contains('challenge-picture')) {
+  if (wordPicture.classList.contains('challenge-picture')) {
+    renderChallenge(combinations[comboCycleIndex]);
+  } else {
     const wordLabel = combo.isPracticeSyllable ? '先練習這個音節' : combo.fullWord;
     wordPicture.innerHTML = `<span class="picture-emoji" role="img" aria-label="${wordLabel}圖片">${combo.emoji}</span><b>${wordLabel}</b><small>${selectedInitial}＋${selectedFinal}</small>`;
   }
@@ -214,13 +239,18 @@ function buildPicker(selector, values, selected, onSelect) {
 buildPicker('#initial-picker', ['ㄅ','ㄇ','ㄉ','ㄌ','ㄏ','ㄐ'], selectedInitial, value => { selectedInitial = value; });
 buildPicker('#final-picker', ['ㄠ','ㄚ','ㄜ','ㄧ'], selectedFinal, value => { selectedFinal = value; });
 document.querySelector('#unlock-button').addEventListener('click', () => {
+  if (!comboCompleted) return;
   const combo = matchingCombination();
   speak(combo.fullWord);
   if (unlockedCharacters < characters.length) unlockedCharacters += 1;
   localStorage.setItem('zhuyinUnlockedCharacters', String(unlockedCharacters));
   renderCollection();
   document.querySelector('#collection-status').textContent = `太棒了！你拼出了「${combo.fullWord}」，新的朋友已加入收集冊！`;
-  document.querySelector('#collection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  comboCycleIndex = (comboCycleIndex + 1) % combinations.length;
+  selectedInitial = combinations[comboCycleIndex].initial;
+  selectedFinal = combinations[comboCycleIndex].final;
+  updateCombination();
+  document.querySelector('#combine').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 document.querySelector('#change-combo-button').addEventListener('click', () => {
   comboCycleIndex = (comboCycleIndex + 1) % combinations.length;
@@ -230,19 +260,21 @@ document.querySelector('#change-combo-button').addEventListener('click', () => {
 });
 document.querySelectorAll('.combo-answer').forEach(button => button.addEventListener('click', () => {
   const answer = button.dataset.answer;
+  const challenge = combinations[comboCycleIndex];
+  const correctAnswer = `${challenge.initial}${challenge.final}`;
   document.querySelectorAll('.combo-answer').forEach(item => item.classList.remove('selected', 'correct', 'wrong'));
   button.classList.add('selected');
   const feedback = document.querySelector('#combo-feedback');
-  if (answer === 'ㄅㄠ') {
+  if (answer === correctAnswer) {
     comboCompleted = true;
     button.classList.add('correct');
-    feedback.textContent = '答對了！包子的完整注音是ㄅㄠ。現在可以領取角色！';
+    feedback.textContent = `答對了！${challenge.fullWord}的完整注音是${correctAnswer}。現在可以領取角色！`;
     feedback.className = 'combo-feedback good';
     document.querySelector('#unlock-button').disabled = false;
   } else {
     comboCompleted = false;
     button.classList.add('wrong');
-    feedback.textContent = '再想一下：包子的第一個音是ㄅ，後面是ㄠ。';
+    feedback.textContent = `再想一下：${challenge.fullWord}的完整注音是${correctAnswer}。`;
     feedback.className = 'combo-feedback try-again';
     document.querySelector('#unlock-button').disabled = true;
   }
