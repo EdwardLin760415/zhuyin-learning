@@ -150,11 +150,11 @@ const characters = [
   { name: '布丁狗', emoji: '🍮', color: '#fff0b8', note: '搖搖尾巴一起玩' },
   { name: '帕恰狗', emoji: '🐶', color: '#dff3e6', note: '活力滿滿的好朋友' }
 ];
-let selectedInitial = 'ㄅ';
-let selectedFinal = 'ㄠ';
-let comboCycleIndex = 0;
-let comboCompleted = false;
 let unlockedCharacters = Number(localStorage.getItem('zhuyinUnlockedCharacters') || 0);
+let comboCycleIndex = unlockedCharacters % combinations.length;
+let selectedInitial = combinations[comboCycleIndex].initial;
+let selectedFinal = combinations[comboCycleIndex].final;
+let comboCompleted = false;
 
 function renderCollection() {
   const collectionGrid = document.querySelector('#collection-grid');
