@@ -19,10 +19,10 @@ const lessons = {
 };
 
 const quizItems = [
-  {symbol:'ㄅ', word:'包子'}, {symbol:'ㄇ', word:'媽媽'}, {symbol:'ㄉ', word:'大象'},
-  {symbol:'ㄌ', word:'老虎'}, {symbol:'ㄏ', word:'河馬'}, {symbol:'ㄐ', word:'雞蛋'},
-  {symbol:'ㄓ', word:'蜘蛛'}, {symbol:'ㄙ', word:'森林'}, {symbol:'ㄚ', word:'阿姨'},
-  {symbol:'ㄧ', word:'衣服'}, {symbol:'ㄨ', word:'烏龜'}, {symbol:'ㄠ', word:'帽子'}
+  {answer:'ㄅㄠ', word:'包子'}, {answer:'ㄇㄚ', word:'媽媽'}, {answer:'ㄉㄚ', word:'大象'},
+  {answer:'ㄌㄠ', word:'老虎'}, {answer:'ㄏㄜ', word:'河馬'}, {answer:'ㄐㄧ', word:'雞蛋'},
+  {answer:'ㄓㄓ', word:'蜘蛛'}, {answer:'ㄙㄣ', word:'森林'}, {answer:'ㄚ', word:'阿姨'},
+  {answer:'ㄧ', word:'衣服'}, {answer:'ㄨ', word:'烏龜'}, {answer:'ㄇㄠ', word:'帽子'}
 ];
 const categoryButtons = [...document.querySelectorAll('[data-category]')];
 const grid = document.querySelector('#symbol-grid');
@@ -78,7 +78,7 @@ function updateProgress() {
 }
 
 function shuffledChoices(answer) {
-  const pool = [...new Set([answer, ...quizItems.map(item => item.symbol)])];
+  const pool = [...new Set([answer, ...quizItems.map(item => item.answer)])];
   const wrong = pool.filter(symbol => symbol !== answer).sort(() => Math.random() - 0.5).slice(0, 3);
   return [...wrong, answer].sort(() => Math.random() - 0.5);
 }
@@ -92,7 +92,7 @@ function showQuestion() {
   document.querySelector('#next-button').disabled = true;
   const choices = document.querySelector('#choices');
   choices.innerHTML = '';
-  shuffledChoices(currentQuestion.symbol).forEach(symbol => {
+  shuffledChoices(currentQuestion.answer).forEach(symbol => {
     const choice = document.createElement('button');
     choice.type = 'button';
     choice.className = 'choice';
@@ -108,16 +108,16 @@ function answerQuestion(button, symbol) {
   answered = true;
   const feedback = document.querySelector('#feedback');
   const choices = [...document.querySelectorAll('.choice')];
-  choices.forEach(choice => { choice.disabled = true; if (choice.textContent === currentQuestion.symbol) choice.classList.add('correct'); });
-  if (symbol === currentQuestion.symbol) {
-    feedback.textContent = `答對了！「${currentQuestion.word}」的開頭是 ${symbol}。`;
+  choices.forEach(choice => { choice.disabled = true; if (choice.textContent === currentQuestion.answer) choice.classList.add('correct'); });
+  if (symbol === currentQuestion.answer) {
+    feedback.textContent = `答對了！「${currentQuestion.word}」的注音組合是 ${currentQuestion.answer}。`;
     feedback.classList.add('good');
-    learned.add(symbol);
+    [...currentQuestion.answer].forEach(mark => learned.add(mark));
     localStorage.setItem('zhuyinLearned', JSON.stringify([...learned]));
     updateProgress();
   } else {
     button.classList.add('incorrect');
-    feedback.textContent = `差一點點！答案是 ${currentQuestion.symbol}，再聽一次、再記一次。`;
+    feedback.textContent = `差一點點！完整答案是 ${currentQuestion.answer}，再聽一次、再拼一次。`;
     feedback.classList.add('try-again');
   }
   document.querySelector('#next-button').disabled = false;
